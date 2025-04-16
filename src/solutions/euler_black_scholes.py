@@ -45,7 +45,7 @@ class EulerBlackScholes:
 
         for t in range(1, len(S)):
             dw = np.random.normal(0, np.sqrt(self.dt))  # Brownian motion increment
-            # Euler-Maruyama scheme for geometric Brownian motion
+            # Euler-Maruyama Discretization of the Black-Scholes Model
             S[t] = S[t-1] * np.exp((self.r - 0.5 * self.sigma_true**2) * self.dt + self.sigma_true * dw)
         
         return time, S
