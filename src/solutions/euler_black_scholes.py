@@ -104,23 +104,24 @@ class EulerBlackScholes:
             delta_values.append(current_delta)
             hedge_times.append(current_time)
         
+        final_time = self.T
+        final_stock_price = S[self.N]
+        final_option_value = max(0, final_stock_price -K)
+        final_delta = stock_position
+        final_portfolio_value = cash_account + stock_position * final_stock_price
+
+        portfolio_values.append(final_portfolio_value)  
+        option_values.append(final_option_value)        
+        delta_values.append(final_delta)                
+        hedge_times.append(final_time)                  
+        
         # Terminal settlement
-        option_payoff = max(0, S[self.N] - K)  # Call option payoff at maturity
-        
-        # Close out stock position
-        cash_account += stock_position * S[self.N]
+        cash_account += stock_position * final_stock_price
         stock_position = 0
+        cash_account -= final_option_value
         
-        # Pay option payoff (we're short the option)
-        cash_account -= option_payoff
-        
-        # Final P&L
+        # Final P&L after liquidation
         final_pnl = cash_account
-        
-        # Add final values to tracking arrays
-        portfolio_values.append(cash_account)
-        option_values.append(option_payoff)
-        hedge_times.append(self.T)
         
         return {
             'final_pnl': final_pnl,
